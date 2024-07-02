@@ -7,7 +7,7 @@ class Pocemon
     end
 
   def to_str
-    "{name: #{@name}, color: #{@color}}"
+    "{name: '#{@name}', color: '#{@color}'}"
   end
 end
 
@@ -39,15 +39,8 @@ pocemons<<Pocemon.new("Jigglypuff", "Pink")
 puts pocemons_to_str(pocemons)
 
 RSpec.describe "Main" do
-  it "#pocemons init" do
-    expect(handle_str("Hellocs")).to eq(7)
-  end
-
-  it "#handle_str without cs" do
-    expect(handle_str("Hello")).to eq("olleH")
-  end
-
-  it "#handle_str with 1 word" do
-    expect(handle_str("H")).to eq("H")
+  it "#pocemons_to_str" do
+    pocemons = [Pocemon.new("Пикачу", "Жёлтый"), Pocemon.new("Джиглипуф", "Розовый")]
+    expect(pocemons_to_str(pocemons)).to eq("[{name: 'Пикачу', color: 'Жёлтый'}, {name: 'Джиглипуф', color: 'Розовый'}]")
   end
 end
