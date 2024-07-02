@@ -1,16 +1,5 @@
 require 'rspec'
 
-class Pocemon
-  def initialize(name, color)
-    @name = name
-      @color = color
-    end
-
-  def to_str
-    "{name: '#{@name}', color: '#{@color}'}"
-  end
-end
-
 def init_pocemons(count)
   pocemons=[]
     count.times do
@@ -18,29 +7,38 @@ def init_pocemons(count)
       name = gets.chomp
       puts "Введите цвет покемона"
       color = gets.chomp
-      pocemons<<Pocemon.new(name, color)
+      pocemons<<{"name"=>name, "color"=>color}
     end
   pocemons
 end
 
+def pocemon_to_str(pocemon)
+  "{name: '#{pocemon["name"]}', color: '#{pocemon["color"]}'}"
+end
+
 def pocemons_to_str(pocemons)
+  pocemons = pocemons.map{|pocemon| pocemon_to_str(pocemon)}
   "["+pocemons.join(", ")+"]"
 end
+
+
 
 #puts "Сколько вы хотите покемонов?"
 #count = gets.to_i
 #pocemons = init_pocemons(count)
-#puts pocemons
 
-pocemons = []
-pocemons<<Pocemon.new("Picka", "Yellow")
-pocemons<<Pocemon.new("Jigglypuff", "Pink")
-
+pocemons = init_pocemons(2)
 puts pocemons_to_str(pocemons)
 
 RSpec.describe "Main" do
   it "#pocemons_to_str" do
-    pocemons = [Pocemon.new("Пикачу", "Жёлтый"), Pocemon.new("Джиглипуф", "Розовый")]
+    pocemons = [{"name"=>"Пикачу", "color"=>"Жёлтый"}, {"name"=>"Джиглипуф", "color"=>"Розовый"}]
     expect(pocemons_to_str(pocemons)).to eq("[{name: 'Пикачу', color: 'Жёлтый'}, {name: 'Джиглипуф', color: 'Розовый'}]")
+  end
+
+  it "#init_pocemons" do
+    allow_any_instance_of(Kernel).to receive(:gets).and_return('Пикачу', "Жёлтый", "Джиглипуф", "Розовый")
+    pocemons = [{"name"=>"Пикачу", "color"=>"Жёлтый"}, {"name"=>"Джиглипуф", "color"=>"Розовый"}]
+    expect(init_pocemons(2)).to eq(pocemons)
   end
 end
