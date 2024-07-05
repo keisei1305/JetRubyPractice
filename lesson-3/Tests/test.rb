@@ -1,4 +1,5 @@
 require_relative "../FileManager.rb"
+require_relative "../ATM/ATM.rb"
 require "rspec"
 
 RSpec.describe FileManager, "CRUD in files. FileManager class test" do
@@ -36,6 +37,37 @@ RSpec.describe FileManager, "CRUD in files. FileManager class test" do
   end
 
   after{File.delete("students_test.txt")}
-end
+end 
 
-RSpec.describe
+RSpec.describe ATM, "ATM machine" do
+  subject do
+    ATM.new(FileManager.new("balance.txt", "buffer.txt"))
+  end
+
+  before do
+    file = File.open("balance.txt", "w")
+    file.puts("100.0")
+    file.close()
+  end
+
+  it "balance" do
+    expect(subject.balance).to eq("100.0")
+  end
+
+  it "deposite" do
+    subject.deposite(150)
+    expect(subject.balance).to eq("250.0")
+  end
+
+  it "withdraw" do
+    subject.withdraw(50)
+    expect(subject.balance).to eq("50.0")
+  end
+
+  it "withdraw error" do
+    expect{subject.withdraw(300)}.to raise_error(Exception, "sum is more than balance")
+  end
+  after do
+    File.delete("balance.txt")
+  end
+end

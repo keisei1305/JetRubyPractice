@@ -25,7 +25,9 @@ class FileManager
       buff.puts(id==index ? text : actor)
     end
     buff.close
-    File.write(@path, File.read(buff))
+    file = File.open(@path, "w")
+    file.write(File.read(buff))
+    file.close
     File.delete(@buffer) if File.exists?(@buffer)
   end
 
