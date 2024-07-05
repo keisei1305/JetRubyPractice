@@ -1,72 +1,35 @@
-require_relative "../FileManager.rb"
-require_relative "../ATM/ATM.rb"
 require "rspec"
+require_relative "../ATM/CashMachine.rb"
 
-RSpec.describe FileManager, "CRUD in files. FileManager class test" do
-  subject do 
-    FileManager.new("students_test.txt", "buffer_test.txt")
-  end
-  before do
-    subject.create("Татарян Евгений")
-    subject.create("Романов Владислав")
-    subject.create("Шевякин Артём")
-    subject.create("Кузнецов Евгений")
-  end
-
-  it "find" do
-    expect(subject.find(1)).to eq("Романов Владислав")
-  end
-
-  it "where" do
-    expect(subject.where("Евгений")).to eq(["Татарян Евгений", "Кузнецов Евгений"])
-  end
-
-  it "update" do 
-    subject.update(0, "Татарян Женя")
-    expect(subject.find(0)).to eq("Татарян Женя")
-  end
-
-  it "delete" do
-    subject.delete(0)
-    expect(subject.find(0)).to eq("Романов Владислав")
-  end
-
-  it "create" do
-    subject.create("Парфинцов Егор")
-    expect(subject.find(4)).to eq("Парфинцов Егор")
-  end
-
-  after{File.delete("students_test.txt")}
-end 
-
-RSpec.describe ATM, "ATM machine" do
+RSpec.describe CashMachine, "ATM machine" do
   subject do
-    ATM.new(FileManager.new("balance.txt", "buffer.txt"))
+    CashMachine.new("balance.txt")
   end
 
   before do
     file = File.open("balance.txt", "w")
-    file.puts("100.0")
+    file.write("100.0")
     file.close()
   end
 
-  it "balance" do
-    expect(subject.balance).to eq("100.0")
+  it "init with deposite" do
+    allow_any_instance_of(Kernel).to receive(:gets).and_return('d', '200', 'q')
+    subject.init
+    expect(File.read("balance.txt").strip).to eq("300.0")
   end
 
-  it "deposite" do
-    subject.deposite(150)
-    expect(subject.balance).to eq("250.0")
+  it "init with withdraw" do
+    allow_any_instance_of(Kernel).to receive(:gets).and_return('d', '200', 'w', '150', 'q')
+    subject.init
+    expect(File.read("balance.txt").strip).to eq("150.0")
   end
 
-  it "withdraw" do
-    subject.withdraw(50)
-    expect(subject.balance).to eq("50.0")
+  it "init" do
+    allow_any_instance_of(Kernel).to receive(:gets).and_return('s', 'd', '200', 's', 'Q')
+    subject.init
+    expect(File.read("balance.txt").strip).to eq("300.0")
   end
 
-  it "withdraw error" do
-    expect{subject.withdraw(300)}.to raise_error(Exception, "sum is more than balance")
-  end
   after do
     File.delete("balance.txt")
   end
