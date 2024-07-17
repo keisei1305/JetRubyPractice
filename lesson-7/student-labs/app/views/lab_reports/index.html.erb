@@ -2,13 +2,25 @@
 
 <h1>Lab reports</h1>
 
-<div id="lab_reports">
-  <% @lab_reports.each do |lab_report| %>
-    <%= render lab_report %>
-    <p>
-      <%= link_to "Show this lab report", lab_report %>
-    </p>
-  <% end %>
-</div>
+<table id="lab_reports">
+  <thead>
+    <tr>
+      <td>Title</td>
+      <td>Description</td>
+      <td>Lab</td>
+      <td>This user</td>
+    </tr>
+  </thead>
+  <tbody>
+    <% @lab_reports.each do |lab| %>
+      <tr>
+        <td><%= lab.title %></td>
+        <td><%= lab.description %></td>
+        <td><%= link_to "Show this report", controller: "lab_reports", action: "show", id: lab.id %></td>
+        <td><%= link_to "Show this user", controller: "users", action: "show", id: lab.user_id %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
-<%= link_to "New lab report", new_lab_report_path %>
+<%= link_to "New lab", new_lab_report_path %>

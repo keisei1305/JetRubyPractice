@@ -9,6 +9,7 @@
       <th>Last name</th>
       <th>Email</th>
       <th>Labs</th>
+      <th>User</th>
     </tr>
   </thead>
   <tbody>
@@ -17,7 +18,8 @@
         <td><%= user.first_name%></td>
         <td><%= user.last_name%></td>
         <td><%= user.email%></td>
-        <td>привет</td>
+        <td><%= link_to "Labs", controller: "lab_reports", action: "index", id: user.id %></td>
+        <td><%= link_to "This user", user %></td>
       </tr>
     <% end %>
   </tbody>
