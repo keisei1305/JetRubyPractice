@@ -3,7 +3,7 @@ class LabReportsController < ApplicationController
 
   # GET /lab_reports or /lab_reports.json
   def index
-    @lab_reports = LabReport.all
+    @lab_reports = params[:user_id] == nil ? LabReport.all : LabReport.where(user_id: params[:user_id])
   end
 
   # GET /lab_reports/1 or /lab_reports/1.json
